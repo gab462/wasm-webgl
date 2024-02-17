@@ -3,16 +3,16 @@ async function main() {
     let gl = app.getContext("webgl2");
     let glObjs = [];		// Interface to js objects from C
 
-    let buffer = null;
+    let c = null;
 
     function cstr(ptr) {
-        let mem = new Uint8Array(buffer);
+        let mem = new Uint8Array(c.memory.buffer);
         let len = 0;
         while (mem[ptr + len] != 0) {
             len++;
         }
 
-        return new TextDecoder().decode(new Uint8Array(buffer, ptr, len));
+        return new TextDecoder().decode(new Uint8Array(c.memory.buffer, ptr, len));
     }
 
     let wasm = await WebAssembly.instantiateStreaming(fetch('index.wasm'), {
@@ -24,7 +24,7 @@ async function main() {
             clear: (mask) => gl.clear(mask),
             create_buffer: () => glObjs.push(gl.createBuffer()) - 1,
             bind_buffer: (type, handle) => gl.bindBuffer(type, glObjs[handle]),
-            buffer_data: (type, data, len, hint) => gl.bufferData(type, new Float32Array(buffer, data, len), hint),
+            buffer_data: (type, data, len, hint) => gl.bufferData(type, new Float32Array(c.memory.buffer, data, len), hint),
             create_shader: (type) => glObjs.push(gl.createShader(type)) - 1,
             shader_source: (handle, code) => gl.shaderSource(glObjs[handle], cstr(code)),
             compile_shader: (handle) => gl.compileShader(glObjs[handle]),
@@ -40,8 +40,7 @@ async function main() {
         }
     });
 
-    let c = wasm.instance.exports;
-    buffer = c.memory.buffer;
+    c = wasm.instance.exports;
 
     c.init();
 

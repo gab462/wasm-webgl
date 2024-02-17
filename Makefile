@@ -1,9 +1,9 @@
 #!/bin/sh
 
-CFLAGS = --target=wasm32 -fno-builtin --no-standard-libraries -std=c++17 -Wall -Wextra -Wshadow -pedantic
+CFLAGS = --target=wasm32 -fno-builtin --no-standard-libraries -std=c++11 -Wall -Wextra -Wshadow -pedantic
 LDFLAGS = --no-entry --export-all --allow-undefined
-CC := clang
-LD := wasm-ld
+CC = clang
+LD = wasm-ld
 
 SRC = src/main.cc src/gl.cc
 OBJ = src/main.o src/gl.o

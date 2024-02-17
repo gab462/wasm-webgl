@@ -16,7 +16,6 @@ namespace state {
 }
 
 char vertex_shader[] =
-/* #embed "vertex.glsl" */
 "#version 300 es\n"
 "precision mediump float;\n"
 "in vec2 vertex_position;\n"
@@ -25,7 +24,6 @@ char vertex_shader[] =
 "}\n";
 
 char fragment_shader[] =
-/* #embed "fragment.glsl" */
 "#version 300 es\n"
 "precision mediump float;\n"
 "out vec4 color;\n"
